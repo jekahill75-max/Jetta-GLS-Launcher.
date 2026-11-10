@@ -1,1 +1,38 @@
 
+name: Build Jetta GLS Launcher
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Descomprimir proyecto
+        run: |
+          unzip -o Jetta_GLS_Launcher_Proyecto_Movil.zip -d proyecto
+
+      - name: Compilar APK
+        run: |
+          cd proyecto
+          find . -name gradlew -type f -exec chmod +x {} \;
+          ./gradlew assembleDebug
+
+      - name: Guardar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Jetta-GLS-Launcher-APK
+          path: proyecto/**/build/outputs/apk/debug/*.apk
