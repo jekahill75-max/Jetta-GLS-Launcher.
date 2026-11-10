@@ -22,11 +22,17 @@ jobs:
 
       - name: Preparar Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
 
-      - name: Verificar archivos
+      - name: Extraer proyecto Android
         run: |
-          ls -la
-          ls -la app
+          mkdir -p proyecto
+          unzip -o Jetta_GLS_Launcher_Proyecto_Movil.zip -d proyecto
+          cp -r proyecto/app .
+          cp proyecto/build.gradle .
+          cp proyecto/settings.gradle .
+          cp proyecto/gradle.properties .
 
       - name: Compilar APK
         run: gradle assembleDebug
@@ -34,5 +40,5 @@ jobs:
       - name: Guardar APK
         uses: actions/upload-artifact@v4
         with:
-          name: Jetta-GLS-Launcher-APK
+          name: Jetta-GLS-Launcher
           path: app/build/outputs/apk/debug/*.apk
