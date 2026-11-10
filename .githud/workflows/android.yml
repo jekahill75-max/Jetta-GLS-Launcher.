@@ -1,4 +1,3 @@
-
 name: Build Jetta GLS Launcher
 
 on:
@@ -21,15 +20,17 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      - name: Preparar Gradle
+        uses: gradle/actions/setup-gradle@v4
+
       - name: Descomprimir proyecto
         run: |
-          unzip -o Jetta_GLS_Launcher_Proyecto_Movil.zip -d proyecto
+          unzip -o Jetaglslaucherproyec.zip -d proyecto
 
       - name: Compilar APK
         run: |
           cd proyecto
-          find . -name gradlew -type f -exec chmod +x {} \;
-          ./gradlew assembleDebug
+          gradle assembleDebug
 
       - name: Guardar APK
         uses: actions/upload-artifact@v4
